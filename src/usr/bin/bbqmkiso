@@ -60,6 +60,7 @@ _chroot_mount () {
 }
 
 _chroot_umount () {
+    sleep 2
     umount "${work_dir}/root-image/tmp"
     umount "${work_dir}/root-image/sys"
     umount "${work_dir}/root-image/run"

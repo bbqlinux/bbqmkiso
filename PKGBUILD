@@ -2,7 +2,7 @@
 
 pkgname=bbqmkiso
 pkgver=8
-pkgrel=1
+pkgrel=2
 pkgdesc="Tools for creating BBQLinux live and install iso images"
 arch=('any')
 url="https://github.com/bbqlinux/bbqmkiso"
