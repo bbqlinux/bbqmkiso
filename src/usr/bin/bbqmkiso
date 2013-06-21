@@ -164,6 +164,8 @@ _usage ()
     echo "      Make base layout and install base group"
     echo "   install"
     echo "      Install all specified packages (-p)"
+    echo "   cache"
+    echo "      Cache all specified packages (-p)"
     echo "   run"
     echo "      run command specified by -r"
     echo "   prepare"
@@ -178,7 +180,7 @@ _usage ()
 }
 
 # Shows configuration according to command mode.
-# $1: init | install | run | prepare | checksum | iso
+# $1: init | install | cache | run | prepare | checksum | iso
 _show_config () {
     local _mode="$1"
     echo
@@ -192,6 +194,10 @@ _show_config () {
             _msg_info "       Pacman config file:   ${pacman_conf}"
             ;;
         install)
+            _msg_info "       Pacman config file:   ${pacman_conf}"
+            _msg_info "                 Packages:   ${pkg_list}"
+            ;;
+        cache)
             _msg_info "       Pacman config file:   ${pacman_conf}"
             _msg_info "                 Packages:   ${pkg_list}"
             ;;
@@ -230,6 +236,23 @@ _pacman ()
     _chroot_umount
 
     _msg_info "Packages installed successfully!"
+}
+
+_pacman_cache ()
+{
+    _msg_info "Caching packages to '${work_dir}/root-image/var/cache/pacman/pkg/'..."
+
+    _chroot_mount
+
+    if [[ "${quiet}" = "y" ]]; then
+        pacman -Sw -r "${work_dir}/root-image" --cachedir "${work_dir}/root-image/var/cache/pacman/pkg" --config "${pacman_conf}" --noconfirm --force $* &> /dev/null
+    else
+        pacman -Sw -r "${work_dir}/root-image" --cachedir "${work_dir}/root-image/var/cache/pacman/pkg" --config "${pacman_conf}" --noconfirm --force $*
+    fi
+
+    _chroot_umount
+
+    _msg_info "Packages cached successfully!"
 }
 
 # Cleanup root-image
@@ -515,6 +538,25 @@ command_install () {
     fi
 }
 
+# Cache packages.
+command_cache () {
+    if [[ ! -f "${pacman_conf}" ]]; then
+        _msg_error "Pacman config file '${pacman_conf}' does not exist" 1
+    fi
+
+    #trim spaces
+    pkg_list="$(echo ${pkg_list})"
+
+    if [[ -z ${pkg_list} ]]; then
+        _msg_error "Packages must be specified" 0
+        _usage 1
+    fi
+
+    _show_config cache
+
+    _pacman_cache "${pkg_list}"
+}
+
 command_init() {
     _show_config init
     _chroot_init
@@ -563,6 +605,9 @@ case "${command_name}" in
         ;;
     install)
         command_install
+        ;;
+    cache)
+        command_cache
         ;;
     run)
         command_run
