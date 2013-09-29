@@ -1,7 +1,7 @@
 # Maintainer: Daniel Hillenbrand <codeworkx@bbqlinux.org>
 
 pkgname=bbqmkiso
-pkgver=10
+pkgver=12
 pkgrel=1
 pkgdesc="Tools for creating BBQLinux live and install iso images"
 arch=('any')
