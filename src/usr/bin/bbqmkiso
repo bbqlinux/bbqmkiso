@@ -73,10 +73,12 @@ _chroot_umount () {
 }
 
 _chroot_init() {
-    if [[ ! -d ${work_dir}/root-image/var/cache/pacman ]]; then
+    if [[ -f "${work_dir}/mkarchiso.init" ]]; then
+        _msg_info "Initial enviroment already installed, skipping."
+    else
         mkdir -p ${work_dir}/root-image/{dev,proc,run,sys,tmp,var/lib/pacman}
-        _pacman "base"
-        _pacman "syslinux"
+        _pacman "base syslinux"
+        : > "${work_dir}/mkarchiso.init"
     fi
 }
 
