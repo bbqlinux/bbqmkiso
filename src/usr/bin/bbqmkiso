@@ -188,9 +188,9 @@ _cleanup () {
         find "${work_dir}/airootfs/boot" -type f -name '*.img' -delete
     fi
     # Delete kernel(s)
-    if [[ -d "${work_dir}/airootfs/boot" ]]; then
-        find "${work_dir}/airootfs/boot" -type f -name 'vmlinuz*' -delete
-    fi
+    #if [[ -d "${work_dir}/airootfs/boot" ]]; then
+    #    find "${work_dir}/airootfs/boot" -type f -name 'vmlinuz*' -delete
+    #fi
     # Delete pacman database sync cache files (*.tar.gz)
     #if [[ -d "${work_dir}/airootfs/var/lib/pacman" ]]; then
     #    find "${work_dir}/airootfs/var/lib/pacman" -maxdepth 1 -type f -delete
