@@ -172,15 +172,11 @@ _pacman_cache ()
 {
     _msg_info "Caching packages to '${work_dir}/airootfs/var/cache/pacman/pkg/'..."
 
-    _chroot_mount
-
     if [[ "${quiet}" = "y" ]]; then
         pacman -Sw -r "${work_dir}/airootfs" --cachedir "${work_dir}/airootfs/var/cache/pacman/pkg" --config "${pacman_conf}" --noconfirm --force $* &> /dev/null
     else
         pacman -Sw -r "${work_dir}/airootfs" --cachedir "${work_dir}/airootfs/var/cache/pacman/pkg" --config "${pacman_conf}" --noconfirm --force $*
     fi
-
-    _chroot_umount
 
     _msg_info "Packages cached successfully!"
 }
