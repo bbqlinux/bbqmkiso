@@ -160,9 +160,9 @@ _pacman ()
     _msg_info "Installing packages to '${work_dir}/airootfs/'..."
 
     if [[ "${quiet}" = "y" ]]; then
-        pacstrap -C "${pacman_conf}" -c -d -G -M "${work_dir}/airootfs" $* &> /dev/null
+        pacstrap -C "${pacman_conf}" -c -G -M "${work_dir}/airootfs" $* &> /dev/null
     else
-        pacstrap -C "${pacman_conf}" -c -d -G -M "${work_dir}/airootfs" $*
+        pacstrap -C "${pacman_conf}" -c -G -M "${work_dir}/airootfs" $*
     fi
 
     _msg_info "Packages installed successfully!"
@@ -285,8 +285,7 @@ command_pkglist () {
     _show_config pkglist
 
     _msg_info "Creating a list of installed packages on live-enviroment..."
-    pacman -Sl -r "${work_dir}/airootfs" --config "${pacman_conf}" | \
-        awk '/\[installed\]$/ {print $1 "/" $2 "-" $3}' > \
+    pacman -Q --sysroot "${work_dir}/airootfs" > \
         "${work_dir}/iso/${install_dir}/pkglist.${arch}.txt"
     _msg_info "Done!"
 
@@ -404,6 +403,8 @@ command_run() {
 if [[ ${EUID} -ne 0 ]]; then
     _msg_error "This script must be run as root." 1
 fi
+
+umask 0022
 
 while getopts 'p:r:C:L:P:A:D:w:o:s:c:g:vh' arg; do
     case "${arg}" in
